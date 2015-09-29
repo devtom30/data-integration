@@ -1,0 +1,161 @@
+---
+output_directory: result
+files:
+###### configuration pour produire le fichier STOCKS.csv.csv
+    - datafile: ./stocks.xls
+      cols:
+          - name: Article
+            num: 2
+            sortkey: true
+            pattern: s/^0*//
+          - name: Fourn
+            num: 1
+            condition: not ('$this' =~ /(?:fin de document|total)/i)
+          - name: StkThé
+            num: 23
+            formatted: 0
+      data:
+          start: 6
+          end: 5337
+      human_check: rows
+      file_result_name: ./STOCKS.csv
+##### configuration pour produire le fichier ASSORTIMENT.csv
+    - datafile: ./tarifs.xls
+      cols:
+          - name: Article
+            num: 1
+            condition: not ('$this' =~ /^\s*page\s*$/i)
+            sortkey: true
+            pattern: s/^0*//
+          - name: Libellé
+            num: 3
+          - name: TVA
+            num: 8
+          - name: Conditionnement
+            num: 10
+          - name: Prix d'achat net
+            num: 16
+            formatted: 0
+          - name: Famille
+            num: 28
+          - name: Marque
+            num: 30
+          - name: Poids
+            num: 31
+            formatted: 0
+          - name: Gencod Achat
+            num: 32
+            sprintf: 013d
+      data:
+          start: 7
+          end: 3819
+      human_check: rows
+      file_result_name: ./ASSORTIMENT.csv
+##### configuration pour produire le fichier VENTES.csv
+    - datafile: ./ventes.xls
+      cols:
+          - name: Article
+            num: 3
+            sortkey: true
+            pattern: s/^0*//
+          - name: Gencod Vente
+            num: 2
+            sprintf: 013d
+#          - name: Famille
+#            num: 5
+          - name: Qté
+            num: 8
+          - name: Mrg Comm.
+            num: 10
+          - name: Tx Mrg Comm.
+            num: 11
+          - name: CA TTC
+            num: 12
+          - name: PV TTC hp
+            num: 16
+          - name: Qté p
+            num: 17
+          - name: PV TTC p
+            num: 19
+          - name: Libellé theme promo
+            num: 20
+          - name: Dt derniere vte
+            num: 21
+            formatted: 1
+#          - name: ROWID
+#            num: 25
+#          - name: Ruptur_nivrup
+#            num: 26 
+      data:
+          start: 4
+          end: 1719
+      human_check: rows
+      file_result_name: ./VENTES.csv
+###### configuration pour produire le fichier ACHATS.csv
+    - datafile: ./achats.xls
+      cols:
+          - name: Gencod Achat
+            num: 1
+            nettoyer_ean: 1
+#            condition: $this > 0
+            sortkey: true
+            sprintf: 013d
+          - name: EAN Article
+            num: 1
+          - name: TOTAL // Achats HT
+            num: 5
+#          - name: TOTAL // Achats HT %R/N-1
+#            num: 6            
+#          - name: TOTAL // CA HT théorique
+#            num: 7
+#          - name: TOTAL // Marge brute théorique sur achats            
+#            num: 9
+#          - name: TOTAL // % mrg brute théo / achats
+#            num: 10
+#          - name: Achats permanents // Achats HT
+#            num: 11
+#          - name: Achats permanents // CA HT théorique
+#            num: 12
+#          - name: Achats permanents // Marge brute théorique sur achats
+#            num: 13
+#          - name: Achats permanents // % mrg brute théo / achats
+#            num: 14
+#          - name: Achats promo // Achats HT
+#            num: 15
+#          - name: Achats promo // CA HT théorique
+#            num: 17
+#          - name: Achats promo // Marge brute théorique sur achats
+#            num: 18
+#          - name: Achats promo // % mrg brute théo / achats
+#            num: 20
+      data:
+          start: 10
+          end: 1020
+      human_check: rows
+      file_result_name: ./ACHATS.csv
+merges:
+    - files:
+        - filename: ./ASSORTIMENT.csv
+          colname: Article
+        - filename: ./VENTES.csv
+          colname: Article
+      resultfile:
+          filename: ./merge1.csv
+    - files:
+        - filename: ./merge1.csv
+          colname: Article
+        - filename: ./STOCKS.csv
+          colname: Article
+      resultfile:
+          filename: ./merge2.csv
+    - files:
+        - filename: ./merge2.csv
+          colname: Gencod Achat
+        - filename: ./ACHATS.csv
+          colname: Gencod Achat
+      resultfile:
+          filename: ./fichier_pour_traitement.csv
+# posttraitement:
+#    placements:
+#        - name: Famille
+#          index: 7

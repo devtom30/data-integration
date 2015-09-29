@@ -1,0 +1,41 @@
+##### configuration pour produire le fichier VENTES.csv
+files:
+    - datafile: ./ventes_test.xls
+      cols:
+          - name: Article
+            num: 3
+            sortkey: true
+            pattern: s/^0*//
+          - name: Gencod Vente
+            num: 2
+#          - name: Famille
+#            num: 5
+          - name: Qté
+            num: 8
+          - name: Mrg Comm.
+            num: 10
+          - name: Tx Mrg Comm.
+            num: 11
+          - name: CA TTC
+            num: 12
+          - name: PV TTC hp
+            num: 16
+          - name: Qté p
+            num: 17
+          - name: PV TTC p
+            num: 19
+          - name: Libellé theme promo
+            num: 20
+          - name: Dt derniere vte
+            num: 21
+            formatted: 1
+#          - name: ROWID
+#            num: 25
+#          - name: Ruptur_nivrup
+#            num: 26
+      data:
+          start: 4
+          end: 631
+      human_check: rows
+      file_result_name: ./VENTES.csv
+

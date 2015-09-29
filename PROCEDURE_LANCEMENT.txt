@@ -1,0 +1,4 @@
+./MERGE.sh <DIRECTORY>
+# the directory must be a sub-directory of "files" directory here in the current directory (may be changed in the future...)
+
+
