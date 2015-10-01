@@ -1,0 +1,14 @@
+---
+files:
+    - output: stocks.xls
+      files_to_concat:
+          - name: stocks_lavage.xls
+            start: 1
+            end: 3133
+          - name: stocks_chiens_chats.xls
+            start: 6
+            end: 524
+          - name: stocks_biscuits.xls
+            start: 6
+            end: 1833
+
