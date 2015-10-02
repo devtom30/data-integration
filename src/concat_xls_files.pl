@@ -156,9 +156,6 @@ sub makeCellHandler {
 		    
 		    my $indexWriteRow = $row + $offsetRow - $start;
 	#	    print 'ws : ' . $ws . "\n";
-			if ( $row < 11) {
-				print 'write row col : ' . $indexWriteRow . ' - ' . $col . "\n";
-			}
 		    $ws->write($indexWriteRow, $col, $cell->value());
 		    $offset = $indexWriteRow + 1;
 		}
