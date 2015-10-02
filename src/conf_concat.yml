@@ -11,4 +11,37 @@ files:
           - name: stocks_biscuits.xls
             start: 5
             end: 1832
+    - output: achats.xls
+      files_to_concat:
+          - name: achats_lavage.xls
+            start: 9
+            end: 419
+          - name: achats_chiens_chats.xls
+            start: 8
+            end: 247
+          - name: achats_biscuits.xls
+            start: 9
+            end: 412
+    - output: tarifs.xls
+      files_to_concat:
+          - name: tarifs_lavage.xls
+            start: 6
+            end: 2097
+          - name: tarifs.xls
+            start: 6
+            end: 3452
+          - name: tarifs_biscuits.xls
+            start: 6
+            end: 1358
+    - output: ventes.xls
+      files_to_concat:
+          - name: ventes_lavage.xls
+            start: 3
+            end: 803
+          - name: ventes_chiens_chats.xls
+            start: 3
+            end: 301
+          - name: ventes_biscuits.xls
+            start: 3
+            end: 634
 
