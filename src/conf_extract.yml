@@ -16,7 +16,7 @@ files:
             formatted: 0
       data:
           start: 6
-          end: 5337
+          end: 5480
       human_check: rows
       file_result_name: ./STOCKS.csv
 ##### configuration pour produire le fichier ASSORTIMENT.csv
@@ -48,7 +48,7 @@ files:
             sprintf: 013d
       data:
           start: 7
-          end: 3819
+          end: 3923
       human_check: rows
       file_result_name: ./ASSORTIMENT.csv
 ##### configuration pour produire le fichier VENTES.csv
@@ -88,7 +88,7 @@ files:
 #            num: 26 
       data:
           start: 4
-          end: 1719
+          end: 1735
       human_check: rows
       file_result_name: ./VENTES.csv
 ###### configuration pour produire le fichier ACHATS.csv
@@ -130,7 +130,7 @@ files:
 #            num: 20
       data:
           start: 10
-          end: 1020
+          end: 1064
       human_check: rows
       file_result_name: ./ACHATS.csv
 merges:

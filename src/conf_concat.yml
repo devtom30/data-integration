@@ -14,7 +14,7 @@ files:
     - output: achats.xls
       files_to_concat:
           - name: achats_lavage.xls
-            start: 9
+            start: 0
             end: 419
           - name: achats_chiens_chats.xls
             start: 8
@@ -25,9 +25,9 @@ files:
     - output: tarifs.xls
       files_to_concat:
           - name: tarifs_lavage.xls
-            start: 6
+            start: 0
             end: 2097
-          - name: tarifs.xls
+          - name: tarifs_chiens_chats.xls
             start: 6
             end: 3452
           - name: tarifs_biscuits.xls
@@ -36,7 +36,7 @@ files:
     - output: ventes.xls
       files_to_concat:
           - name: ventes_lavage.xls
-            start: 3
+            start: 0
             end: 803
           - name: ventes_chiens_chats.xls
             start: 3
