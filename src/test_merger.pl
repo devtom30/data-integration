@@ -99,16 +99,26 @@ ok ($h_merged->{'val1.2'} eq 'val1.1;val1.3;val1.4;val1.5;');
 ok ($h_merged->{'val2.2'} eq 'val2.1;val2.3;val2.4;val2.5;');
 ok ($h_merged->{'val3.2'} eq 'val3.1;val3.3;val3.4;val3.5;'); 
 
+# la partie utile pour merger les fichiers commence ici
+# avant ce ne sont que des tests unitaires
+# pas eu le temps de le mettre en ordre
+# time is money...
 my $conf_file = './conf_extract.yml';
+# lecture du fichier de conf
 my $yaml_config = YAML::Tiny->read($conf_file);
+# lancement de la fusion (merge) numéro 1
 Merger::merge_files_direct($yaml_config->[0]->{merges}->[0]);
+# lancement de la fusion (merge) numéro 2
 print 'second merge'."\n";
 Merger::merge_files_direct($yaml_config->[0]->{merges}->[1]);
+# lancement de la fusion (merge) numéro 3
 print 'troisieme merge'."\n";
 Merger::merge_files_direct($yaml_config->[0]->{merges}->[2]);
 
 print '################';
 
+# lancement des post traitements si trouvé en configuration
+# plus utilisé actuellement
 my $rows = Merger::do_post_traitement($yaml_config->[0], $yaml_config->[0]->{merges}->[2]->{resultfile}->{filename});
 # filename
 my $current_dir = getcwd();
@@ -117,6 +127,8 @@ my $fileresult = $yaml_config->[0]->{merges}->[2]->{resultfile}->{filename};
 $fileresult =~ s/\.csv$/_$current_dir\.csv/;
 Merger::write_file_from_list_of_list($rows, $fileresult);
 
+# le script s'arrête ici, le reste ne sert pas en l'état...
+# time is money...
 exit;
 
 my $str = 'sdgesq;sdfgsdg;sdfgsdg;;;sdfgsd;dsfg;\n;\n;\n';

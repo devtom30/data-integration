@@ -70,7 +70,11 @@ sub merge_files {
 	}
 }
 
+# permet de fusionner deux fichiers selon la valeur d'une colonne
+# par exemple : EAN
+# la fonction reçoit la structure de configuration en paramètre
 sub merge_files_direct {
+	# paramètre 1 : la structure avec la configuration
 	my $config = shift;
 
 	my @t         = reverse @{ $config->{files} };
@@ -80,8 +84,11 @@ sub merge_files_direct {
 	my $colindex1 =
 	  determine_column_index_in_list( \@entete1, $fileconf1->{colname} );
 
+	# on prélève les valeurs sauf la colonne de pivot (qui sert à déterminer quelle ligne correspond à telle ligne)
 	@list1 = @list1[ 1 .. $#list1 ];
+	# on prépare les données
 	my $data1   = prepare_data_str( \@list1, $colindex1 );
+	# on prépare les entêtes
 	my $entete1 = prepare_entete( \@entete1, $colindex1 );
 
 	while ( my $fileconf2 = pop @t ) {
@@ -107,8 +114,10 @@ sub merge_files_direct {
 		$entete1 = $entete_merged;
 	}
 
+	# création du tableau final qui est le résultat de la fusion
 	my $final_tab = create_final_tab( $fileconf1->{colname}, $entete1, $data1 );
 
+	# écrit le fichier final, résultat de la fusion des deux fichiers
 	write_file_from_data_list( $final_tab, $config->{resultfile}->{filename} );
 }
 
