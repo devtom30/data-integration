@@ -1,5 +1,6 @@
 #!/usr/bin/perl -W
 
+# chargement des modules utilisés par ce script
 use Spreadsheet::ParseExcel::Stream::XLS;
 use YAML::Tiny;
 use Data::Dumper;
@@ -9,38 +10,68 @@ use Log::Log4perl qw(:easy);
 use utf8;
 use functions;
 
+# chaine à afficher si les paramètres ne sont pas donnés au script
 my $usage = './<SCRIPT> <YAML_CONF_FILE>';
+# @ARGV est la structure qui contient les paramètres passés au script
+# $ARGV[0] est le premier, $ARGV[1] le deuxième, etc...
+# si le premier paramètre n'est pas défini
 if ( !defined( $ARGV[0] ) ) {
+	# alors on affiche la chaine qui donne comment appeler le script
 	print $usage. "\n";
+	# on arrête l'exécution
 	exit;
 }
+
 
 # LOG file
 my $logger = &init_log();
 $logger->error('logger init');
 
+# le fichier de conf est le premier argument passé en paramètre
 my $conf_file = $ARGV[0];
 
+# utilisation du module YAML pour lire le fichier de conf
 my $yaml = YAML::Tiny->read($conf_file)
+		# exception alors on arrête l'exécution du script, on affiche le message en donnant l'erreur
+		# retournée par le module YAML
   or die "can't read conf file $conf_file : $! " . ( YAML::Tiny->errstr );
+
+# pour afficher la structure de manière lisible
+# équivaut en PHP à : '<pre>' . print_r(<LA_STRUCTURE>) . '</pre>'
 my $dd2 = Data::Dumper->new( [$yaml] );
+# alimentation du fichier de log en niveau debug
 $logger->debug( $dd2->Dump() );
 
+# lecture de la première section du fichier de configuration
 my $config = $yaml->[0];
 
 # extract
-# production des fichiers
+# pour chaque élément de la section 'files'
 for my $config_file ( @{ $config->{files} } ) {
+	# appel de la fonction extract_file
 	&extract_file($config_file);
 }
 
 
-
+# Cette fonction lit un fichier ligne à ligne
+# met les valeurs dans une structure
+# et écrit cette structure dans un fichier CSV
+# ne sont conservés que les valeurs mentionnées dans le fichier de configuration
+# certaines règles sont appliquées :
+# - pour rejeter certaines lignes qui matchent un certain pattern (lignes qui ne servent à rien
+# mais présentes dans le fichier source
+# - les valeurs extraites des colonnes sont formatées ou pas, pour extraire une partie, selon le pattern en
+# configuration
+# etc...
 sub extract_file {
+	# réception du premier paramètre passé à la fonction
 	my $config = shift;
+
+	# alimentation du log
 	my $dd = Data::Dumper->new( [$config] );
 	$logger->debug( $dd->Dump() );
 
+	# isolation des variables de la configuration
 	my $f                = $config->{datafile};
 	my $cols             = $config->{cols};
 	my $data_from_line   = $config->{data}->{start};
@@ -57,6 +88,7 @@ sub extract_file {
 	my $options = {
 		'Type' => 'XLS'
 	};
+	# lecture du fichier XLS
 	my $xls = Spreadsheet::ParseExcel::Stream::XLS->new($f);    #, \%options);
 
 	my $index       = 1;
@@ -72,7 +104,8 @@ sub extract_file {
         print 'did NOT find no sheet in file '.$f.". Does this file exist ? It seems not...\n";
         exit;
     }
-    
+
+	# lecture de chaque row du fichier
 	while ( my $row = $sheet->unformatted ) {
         my $formatted_row = $sheet->row(1);
 		if ( $index > $data_end_line ) {
@@ -258,16 +291,21 @@ sub extract_file {
 }
 
 sub write_csv() {
+	# premier paramètre
 	my $cols             = shift;
+	# 2è paramètre
 	my $file_result_name = shift;
+	# 3è paramètre
 	my $rows             = shift;
 
+	# ouverture en écriture du fichier $file_result_name
 	open( O, ">" . $file_result_name )
 	  or die "can't open file for write <$file_result_name> : $!";
 
 	# columns names
 	for my $col (@$cols) {
 #		print O '"' . $col->{name} . '";';
+		# écriture de chaque entête
 		print O $col->{name} . ';';
 	}
 	print O "\n";
@@ -277,7 +315,9 @@ sub write_csv() {
 #			print O '"' . $val . '";';
 #			print O $val . ';';
 #		}
+		# écriture de la ligne (join équivaut à implode de PHP)
 		print O (join (';', @$row));
+		# écriture d'un retour chariot en fin de ligne
 		print O "\n";
 	}
 }
